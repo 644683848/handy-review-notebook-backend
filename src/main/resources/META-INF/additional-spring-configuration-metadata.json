@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "user.timeout",
+      "type": "java.lang.Long",
+      "description": "用户登录过期时间."
+    }
+  ] }
