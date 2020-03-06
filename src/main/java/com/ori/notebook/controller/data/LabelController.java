@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/data/label")
 @Validated
@@ -20,8 +19,8 @@ public class LabelController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public Result findAll() {
-        return new Result(ResultCode.SUCCESS, labelService.findAll());
+    public Result findAllByUserId() {
+        return new Result(ResultCode.SUCCESS, labelService.findAllByUserId());
     }
 
     @RequestMapping(method = RequestMethod.POST)

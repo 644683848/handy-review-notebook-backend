@@ -1,13 +1,15 @@
 package com.ori.notebook.model.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "data_card")
@@ -21,4 +23,10 @@ public class Card {
     String question;
     String answer;
     Date createTime;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name="label_card",joinColumns={@JoinColumn(name="card_id",referencedColumnName="id")},
+            inverseJoinColumns={@JoinColumn(name="label_id",referencedColumnName="id")}
+    )
+    private Set<Label> labels = new HashSet<>();
 }

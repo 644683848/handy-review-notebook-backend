@@ -5,7 +5,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
 public class Utils {
-    public static String getCurUsername() {
+    public static String getCurUserId() {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         return user.getId();

@@ -1,5 +1,7 @@
 package com.ori.notebook.utils.shiro.session;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.servlet.ShiroHttpServletRequest;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.apache.shiro.web.util.WebUtils;
@@ -23,8 +25,7 @@ public class CustomSessionManager extends DefaultWebSessionManager {
 
         //获取请求头Authorization中的数据
         String id = WebUtils.toHttp(request).getHeader("Authorization");
-        if(StringUtils.isEmpty(id)) {
-            //如果没有携带，生成新的sessionId
+        if(id == null) {
             return super.getSessionId(request,response);
         }else{
             //返回sessionId；

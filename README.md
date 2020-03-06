@@ -1,3 +1,8 @@
+## 来不及解决的问题
+1. utils/shiro/realm/UserRealm中, 如果一个请求没有携带认证头, 那么不管它是不是登录请求, 有没有验证用户名密码, 
+都会往Redis中存储SessionID
+2. 为什么@CrossOrigin不起作用, 但加上CorsConfig就没问题了.
+
 ## 踩坑记录
 1. utils中的getCurUsername()方法,User类不能cast成User类.. 
 

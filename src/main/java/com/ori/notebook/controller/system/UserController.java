@@ -12,26 +12,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/sys")
-@Validated
 public class UserController {
     @Value("${user.timeout}")
     private long timeout;
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Result login(@RequestBody Map<String, String> map) {
-        try {
-            Subject subject = SecurityUtils.getSubject();
-            UsernamePasswordToken usernamePasswordToken =
-                    new UsernamePasswordToken(map.get("username"), map.get("password"));
-            subject.login(usernamePasswordToken);
-            //设置超时时间
-            subject.getSession().setTimeout(timeout);
-            return new Result(ResultCode.SUCCESS, subject.getSession().getId());
-        }catch (Exception e){
-            e.printStackTrace();
-            return new Result(ResultCode.UNAUTHENTICATED, e.getMessage());
-        }
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken usernamePasswordToken =
+                new UsernamePasswordToken(map.get("username"), map.get("password"));
+        //账号或密码错误在common中统一处理
+        subject.login(usernamePasswordToken);
+        //设置超时时间
+        subject.getSession().setTimeout(timeout);
+        return new Result(ResultCode.SUCCESS, subject.getSession().getId());
     }
 }

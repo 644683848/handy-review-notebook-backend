@@ -19,12 +19,13 @@ public class LabelService {
         this.idWorker = idWorker;
     }
 
-    public List<Label> findAll() {
-        return labelDao.findAll();
+    public List<Label> findAllByUserId() {
+        return labelDao.findAllByUserId(Utils.getCurUserId());
     }
+
     public Label save(Label label) {
         label.setId(idWorker.nextId() + "");
-        label.setUserId(Utils.getCurUsername());
+        label.setUserId(Utils.getCurUserId());
         labelDao.save(label);
         return label;
     }
