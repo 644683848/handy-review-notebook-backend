@@ -11,6 +11,11 @@ spring:
     url: jdbc:mysql://182.92.243.125:3306/handy_review_note_book?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root
     password: root
+    hikari:
+      minimum-idle: 3
+      maximum-pool-size: 10
+      max-lifetime: 30000
+      connection-test-query: SELECT 1
   #3.JPA
   jpa:
     database: MySQL

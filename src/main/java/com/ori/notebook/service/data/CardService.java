@@ -10,8 +10,10 @@ import com.ori.notebook.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.*;
 import java.util.*;
 
 @Service
@@ -27,8 +29,17 @@ public class CardService {
         this.idWorker = idWorker;
     }
 
-    public Page<Card> findAllByUserId(int page, int size) {
-        return cardDao.findAllByUserId(Utils.getCurUserId(), PageRequest.of(page - 1, size));
+    public List<Card> findByLabelAndTime(List<String> labelIds, Date startTime, Date endTime) {
+        return cardDao.findAll((Specification<Card>) (root, criteriaQuery, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (labelIds != null && !labelIds.isEmpty()) {
+                Join<Card, Label> join = root.join("labels", JoinType.INNER);
+                predicates.add(join.get("id").in(labelIds));
+            }
+            if (startTime != null && endTime != null) {
+                predicates.add(criteriaBuilder.between(root.get("createTime"), startTime, endTime));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));});
     }
 
     public Card save(Map<String, Object> map) {
