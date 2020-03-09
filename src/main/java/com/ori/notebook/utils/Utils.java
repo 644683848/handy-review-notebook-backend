@@ -10,4 +10,9 @@ public class Utils {
         User user = (User) subject.getPrincipal();
         return user.getId();
     }
+    public static User getCurUser() {
+        Subject subject = SecurityUtils.getSubject();
+        return (User) subject.getPrincipal();
+    }
+
 }

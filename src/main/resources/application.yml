@@ -8,7 +8,7 @@ spring:
   #2.数据库连接池
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://182.92.243.125:3306/handy_review_note_book?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/handy_review_note_book?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root
     password: root
     hikari:
@@ -19,7 +19,7 @@ spring:
   #3.JPA
   jpa:
     database: MySQL
-    show-sql: false
+    show-sql: true
     open-in-view: true
   #4.Redis
   redis:

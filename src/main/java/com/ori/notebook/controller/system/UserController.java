@@ -2,6 +2,7 @@ package com.ori.notebook.controller.system;
 
 import com.ori.notebook.model.result.Result;
 import com.ori.notebook.model.result.ResultCode;
+import com.ori.notebook.utils.Utils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -26,6 +28,9 @@ public class UserController {
         subject.login(usernamePasswordToken);
         //设置超时时间
         subject.getSession().setTimeout(timeout);
-        return new Result(ResultCode.SUCCESS, subject.getSession().getId());
+        Map<String, Object> res = new HashMap<>();
+        res.put("nickname", Utils.getCurUser().getNickname());
+        res.put("token", subject.getSession().getId());
+        return new Result(ResultCode.SUCCESS, res);
     }
 }

@@ -1,5 +1,6 @@
 package com.ori.notebook.controller.data;
 
+import com.ori.notebook.model.data.Card;
 import com.ori.notebook.model.result.Result;
 import com.ori.notebook.model.result.ResultCode;
 import com.ori.notebook.service.data.CardService;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,11 @@ public class CardController {
         this.cardService = cardService;
     }
 
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+    public Result deleteCard(@PathVariable String id) {
+        return new Result(ResultCode.SUCCESS, cardService.deleteCard(id));
+    }
+
     @RequestMapping(path = "/review", method = RequestMethod.GET)
     public Result review() {
         return new Result(ResultCode.SUCCESS, cardService.review());
@@ -33,14 +40,16 @@ public class CardController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/{labelIds}/{startTime}/{endTime}")
     public Result findByLabelsAndTime(@PathVariable List<String> labelIds,
-                                      @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startTime,
-                                      @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endTime) {
+                                      @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startTime,
+                                      @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endTime) {
+        List<Card> byLabelAndTime = cardService.findByLabelAndTime(labelIds, startTime, endTime);
+        System.out.println(byLabelAndTime.size());
         return new Result(ResultCode.SUCCESS, cardService.findByLabelAndTime(labelIds, startTime, endTime));
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/{startTime}/{endTime}")
-    public Result findByTime( @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startTime,
-                              @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endTime) {
+    public Result findByTime( @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startTime,
+                              @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endTime) {
         return new Result(ResultCode.SUCCESS, cardService.findByLabelAndTime(null, startTime, endTime));
     }
 

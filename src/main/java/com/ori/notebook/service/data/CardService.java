@@ -12,7 +12,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -27,6 +26,16 @@ public class CardService {
         this.cardDao = cardDao;
         this.labelDao = labelDao;
         this.idWorker = idWorker;
+    }
+
+    public Card deleteCard(String id) {
+        if (cardDao.findById(id).isPresent()) {
+            Card card = cardDao.findById(id).get();
+            cardDao.deleteById(id);
+            return card;
+        } else {
+            throw new NoSuchIdException("没有这个id:" + id);
+        }
     }
 
     // 根据记忆曲线查找需要复习的所有卡片
@@ -50,9 +59,10 @@ public class CardService {
         }
     }
 
-    public List<Card> findByLabelAndTime(List<String> labelIds, Date startTime, Date endTime) {
+    public List<Card> findByLabelAndTime(List<String> labelIds, LocalDate startTime, LocalDate endTime) {
         return cardDao.findAll((Specification<Card>) (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
+            criteriaQuery.distinct(true);
             if (labelIds != null && !labelIds.isEmpty()) {
                 Join<Card, Label> join = root.join("labels", JoinType.INNER);
                 predicates.add(join.get("id").in(labelIds));

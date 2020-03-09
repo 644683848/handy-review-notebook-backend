@@ -19,6 +19,7 @@ public class User implements Serializable, AuthCachePrincipal {
     @Id
     String id;
     String username;
+    String nickname;
     String password;
 
     @Override
