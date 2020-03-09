@@ -1,12 +1,9 @@
 package com.ori.notebook.controller.data;
 
-import com.ori.notebook.model.data.Card;
-import com.ori.notebook.model.result.PageResult;
 import com.ori.notebook.model.result.Result;
 import com.ori.notebook.model.result.ResultCode;
 import com.ori.notebook.service.data.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +19,11 @@ public class CardController {
     @Autowired
     public CardController(CardService cardService) {
         this.cardService = cardService;
+    }
+
+    @RequestMapping(path = "/review", method = RequestMethod.GET)
+    public Result review() {
+        return new Result(ResultCode.SUCCESS, cardService.review());
     }
 
     @RequestMapping(method = RequestMethod.PATCH)

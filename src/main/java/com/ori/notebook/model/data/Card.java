@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +23,7 @@ public class Card {
     String userId;
     String question;
     String answer;
-    Date createTime;
+    LocalDate createTime;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="label_card",joinColumns={@JoinColumn(name="card_id",referencedColumnName="id")},

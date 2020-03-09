@@ -12,6 +12,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -25,6 +27,12 @@ public class CardService {
         this.cardDao = cardDao;
         this.labelDao = labelDao;
         this.idWorker = idWorker;
+    }
+
+    // 根据记忆曲线查找需要复习的所有卡片
+    public List<Card> review() {
+        List<LocalDate> allNeedReviewDate = getAllNeedReviewDate();
+        return cardDao.findAllByUserIdAndCreateTimeIn(Utils.getCurUserId(), allNeedReviewDate);
     }
 
     public Card update(Map<String, String> map) {
@@ -61,10 +69,20 @@ public class CardService {
         card.setUserId(Utils.getCurUserId());
         card.setQuestion(map.get("question").toString());
         card.setAnswer(map.get("answer").toString());
-        card.setCreateTime(new Date());
+        card.setCreateTime(LocalDate.now());
         card.setLabels(findLabelsById((List<String>) map.get("labels")));
         cardDao.save(card);
         return card;
+    }
+
+    private List<LocalDate> getAllNeedReviewDate() {
+        List<LocalDate> res = new ArrayList<>();
+        List<Integer> reviewCycle = Arrays.asList(0, 1, 2, 4, 7, 15);
+        LocalDate now = LocalDate.now();
+        for (Integer integer : reviewCycle) {
+            res.add(now.minusDays(integer));
+        }
+        return res;
     }
 
     private Set<Label> findLabelsById(List<String> ids) {

@@ -31,7 +31,7 @@ class NotebookApplicationTests {
     }
 
     @Test
-    void testDao() throws ParseException {
+    void testDao() {
 
     }
 }
