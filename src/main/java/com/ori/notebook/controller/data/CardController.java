@@ -24,6 +24,11 @@ public class CardController {
         this.cardService = cardService;
     }
 
+    @RequestMapping(method = RequestMethod.PATCH)
+    public Result update(@RequestBody Map<String, String> map) {
+        return new Result(ResultCode.SUCCESS, cardService.update(map));
+    }
+
     @RequestMapping(method = RequestMethod.GET, path = "/{labelIds}/{startTime}/{endTime}")
     public Result findByLabelsAndTime(@PathVariable List<String> labelIds,
                                       @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startTime,

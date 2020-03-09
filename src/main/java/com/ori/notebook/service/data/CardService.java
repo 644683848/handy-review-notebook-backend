@@ -8,8 +8,6 @@ import com.ori.notebook.model.data.Label;
 import com.ori.notebook.utils.IdWorker;
 import com.ori.notebook.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +25,21 @@ public class CardService {
         this.cardDao = cardDao;
         this.labelDao = labelDao;
         this.idWorker = idWorker;
+    }
+
+    public Card update(Map<String, String> map) {
+        String curId = map.get("id");
+        String newQuestion = map.get("newQuestion");
+        String newAnswer = map.get("newAnswer");
+        if (cardDao.findById(curId).isPresent()) {
+            Card oldCard = cardDao.findById(curId).get();
+            oldCard.setQuestion(newQuestion);
+            oldCard.setAnswer(newAnswer);
+            cardDao.save(oldCard);
+            return oldCard;
+        } else {
+            throw new NoSuchIdException("没有这个id: "+ curId);
+        }
     }
 
     public List<Card> findByLabelAndTime(List<String> labelIds, Date startTime, Date endTime) {
