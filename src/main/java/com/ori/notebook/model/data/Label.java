@@ -22,6 +22,7 @@ public class Label {
     String id;
     String userId;
     String labelName;
+    String color;
 
 //    @JsonIgnore
 //    @ManyToMany(mappedBy="labels")

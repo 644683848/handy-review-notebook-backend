@@ -18,6 +18,11 @@ public class LabelController {
         this.labelService = labelService;
     }
 
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+    public Result dropLabelById(@PathVariable String id) {
+        return new Result(ResultCode.SUCCESS, labelService.dropLabel(id));
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     public Result findAllByUserId() {
         return new Result(ResultCode.SUCCESS, labelService.findAllByUserId());

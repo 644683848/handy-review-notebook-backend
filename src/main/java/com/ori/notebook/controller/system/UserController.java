@@ -1,12 +1,15 @@
 package com.ori.notebook.controller.system;
 
+import com.ori.notebook.dao.system.UserDao;
 import com.ori.notebook.model.result.Result;
 import com.ori.notebook.model.result.ResultCode;
+import com.ori.notebook.service.system.UserService;
 import com.ori.notebook.utils.Utils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +20,23 @@ import java.util.Map;
 @RestController
 @RequestMapping("/sys")
 public class UserController {
+    private UserService userService;
     @Value("${user.timeout}")
     private long timeout;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @RequestMapping(value = "/user/nickname" , method = RequestMethod.PATCH)
+    public Result changeNickname (@RequestBody Map<String, String> map){
+        userService.changeNickname(map.get("nickname"));
+        return new Result(ResultCode.SUCCESS);
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Result login(@RequestBody Map<String, String> map) {
+    public Result login (@RequestBody Map<String, String> map) {
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken usernamePasswordToken =
                 new UsernamePasswordToken(map.get("username"), map.get("password"));

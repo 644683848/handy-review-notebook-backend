@@ -1,5 +1,6 @@
 package com.ori.notebook.service.data;
 
+import com.ori.notebook.common.Exception.NoSuchIdException;
 import com.ori.notebook.dao.data.LabelDao;
 import com.ori.notebook.model.data.Label;
 import com.ori.notebook.utils.IdWorker;
@@ -21,6 +22,16 @@ public class LabelService {
 
     public List<Label> findAllByUserId() {
         return labelDao.findAllByUserId(Utils.getCurUserId());
+    }
+
+    public Label dropLabel(String id) {
+        if (labelDao.findById(id).isPresent()) {
+            Label label = labelDao.findById(id).get();
+            labelDao.deleteById(id);
+            return label;
+        }else {
+            throw new NoSuchIdException("没有这个标签: " + id);
+        }
     }
 
     public Label save(Label label) {
