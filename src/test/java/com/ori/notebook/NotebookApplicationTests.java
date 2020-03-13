@@ -5,6 +5,7 @@ import com.ori.notebook.dao.data.LabelDao;
 import com.ori.notebook.model.data.Card;
 import com.ori.notebook.model.data.Label;
 import com.ori.notebook.service.data.CardService;
+import com.ori.notebook.service.system.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ class NotebookApplicationTests {
     @Autowired
     private CardService cardService;
     @Autowired
+    private UserService userService;
+    @Autowired
     private LabelDao labelDao;
     @Autowired
     private CardDao cardDao;
@@ -32,6 +35,7 @@ class NotebookApplicationTests {
 
     @Test
     void testDao() {
-
+        userService.register("u1", "宁次", "123");
     }
+
 }

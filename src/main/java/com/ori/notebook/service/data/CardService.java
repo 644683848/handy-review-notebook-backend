@@ -63,6 +63,7 @@ public class CardService {
         return cardDao.findAll((Specification<Card>) (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             criteriaQuery.distinct(true);
+            predicates.add(criteriaBuilder.equal(root.get("userId"), Utils.getCurUserId()));
             if (labelIds != null && !labelIds.isEmpty()) {
                 Join<Card, Label> join = root.join("labels", JoinType.INNER);
                 predicates.add(join.get("id").in(labelIds));
@@ -73,26 +74,32 @@ public class CardService {
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));});
     }
 
-    public Card save(Map<String, Object> map) {
-        Card card = new Card();
-        card.setId(idWorker.nextId() + "");
-        card.setUserId(Utils.getCurUserId());
-        card.setQuestion(map.get("question").toString());
-        card.setAnswer(map.get("answer").toString());
-        card.setCreateTime(LocalDate.now());
-        card.setLabels(findLabelsById((List<String>) map.get("labels")));
+    public Card save(Map<String, Object> map, String curUserId) {
+        Card card = initCard(curUserId, map.get("question"), map.get("answer"), findLabelsById((List<String>) map.get("labels")));
         cardDao.save(card);
         return card;
     }
 
     private List<LocalDate> getAllNeedReviewDate() {
         List<LocalDate> res = new ArrayList<>();
-        List<Integer> reviewCycle = Arrays.asList(0, 1, 2, 4, 7, 15);
+        List<Integer> reviewCycle = Arrays.asList(0, 1, 2, 4, 7, 15, 30);
         LocalDate now = LocalDate.now();
         for (Integer integer : reviewCycle) {
             res.add(now.minusDays(integer));
         }
         return res;
+    }
+
+
+    public List<Card> saveAll(List<Map<String, Object>> maps, String curUserId) {
+        List<Card> cards = new ArrayList<>();
+        for (Map<String, Object> map : maps) {
+            Card card = initCard(curUserId, map.get("question").toString(),
+                    map.get("answer").toString(), (Set<Label>) map.get("labels"));
+            cards.add(card);
+        }
+        cardDao.saveAll(cards);
+        return cards;
     }
 
     private Set<Label> findLabelsById(List<String> ids) {
@@ -107,5 +114,16 @@ public class CardService {
             set.add(label);
         }
         return set;
+    }
+
+    private Card initCard(String curUserId, Object question, Object answer, Set<Label> labels) {
+        Card card = new Card();
+        card.setId(idWorker.nextId() + "");
+        card.setUserId(curUserId);
+        card.setQuestion(question.toString());
+        card.setAnswer(answer.toString());
+        card.setCreateTime(LocalDate.now());
+        card.setLabels(labels);
+        return card;
     }
 }

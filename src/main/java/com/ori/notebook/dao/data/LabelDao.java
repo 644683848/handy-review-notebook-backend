@@ -4,8 +4,8 @@ import com.ori.notebook.model.data.Label;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import java.util.List;
+import java.util.Set;
 
 public interface LabelDao extends JpaRepository<Label, String>, JpaSpecificationExecutor<Label> {
-    List<Label> findAllByUserId(String userId);
+    Set<Label> findAllByUserId(String userId);
 }

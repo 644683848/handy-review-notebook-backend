@@ -8,7 +8,10 @@ import com.ori.notebook.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 public class LabelService {
@@ -20,8 +23,8 @@ public class LabelService {
         this.idWorker = idWorker;
     }
 
-    public List<Label> findAllByUserId() {
-        return labelDao.findAllByUserId(Utils.getCurUserId());
+    public Set<Label> findAllByUserId(String curUserId) {
+        return labelDao.findAllByUserId(curUserId);
     }
 
     public Label dropLabel(String id) {
@@ -34,10 +37,27 @@ public class LabelService {
         }
     }
 
-    public Label save(Label label) {
+    public Label save(Map<String, String> map, String curUserId) {
+        Label label = new Label();
+        label.setLabelName(map.get("labelName"));
+        label.setColor(map.get("color"));
         label.setId(idWorker.nextId() + "");
-        label.setUserId(Utils.getCurUserId());
+        label.setUserId(curUserId);
         labelDao.save(label);
         return label;
+    }
+
+    public List<Label> saveAll(List<Map<String, String>> maps, String curUserId) {
+        List<Label> labels = new ArrayList<>();
+        for (Map<String, String> map : maps) {
+            Label label = new Label();
+            label.setLabelName(map.get("labelName"));
+            label.setColor(map.get("color"));
+            label.setId(idWorker.nextId() + "");
+            label.setUserId(curUserId);
+            labels.add(label);
+        }
+        labelDao.saveAll(labels);
+        return labels;
     }
 }

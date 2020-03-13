@@ -6,7 +6,6 @@ import com.ori.notebook.model.result.ResultCode;
 import com.ori.notebook.service.system.UserService;
 import com.ori.notebook.utils.Utils;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +47,11 @@ public class UserController {
         res.put("nickname", Utils.getCurUser().getNickname());
         res.put("token", subject.getSession().getId());
         return new Result(ResultCode.SUCCESS, res);
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public Result register(@RequestBody Map<String, String> map){
+        return new Result(ResultCode.SUCCESS,
+                userService.register(map.get("username"), map.get("nickname"), map.get("password") ));
     }
 }
