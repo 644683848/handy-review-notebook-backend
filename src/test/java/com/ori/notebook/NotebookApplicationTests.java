@@ -6,6 +6,7 @@ import com.ori.notebook.model.data.Card;
 import com.ori.notebook.model.data.Label;
 import com.ori.notebook.service.data.CardService;
 import com.ori.notebook.service.system.UserService;
+import com.ori.notebook.utils.JwtUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +30,18 @@ class NotebookApplicationTests {
     private LabelDao labelDao;
     @Autowired
     private CardDao cardDao;
+
     @Test
     void contextLoads() {
+        String subject = "ori";
+        System.out.println(JwtUtils.getTimeOut());
+
     }
 
     @Test
     void testDao() {
-        userService.register("u1", "宁次", "123");
+
     }
+
 
 }

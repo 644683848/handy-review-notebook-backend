@@ -6,7 +6,7 @@ import com.ori.notebook.dao.data.LabelDao;
 import com.ori.notebook.model.data.Card;
 import com.ori.notebook.model.data.Label;
 import com.ori.notebook.utils.IdWorker;
-import com.ori.notebook.utils.Utils;
+import com.ori.notebook.utils.ShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -41,7 +41,7 @@ public class CardService {
     // 根据记忆曲线查找需要复习的所有卡片
     public List<Card> review() {
         List<LocalDate> allNeedReviewDate = getAllNeedReviewDate();
-        return cardDao.findAllByUserIdAndCreateTimeIn(Utils.getCurUserId(), allNeedReviewDate);
+        return cardDao.findAllByUserIdAndCreateTimeIn(ShiroUtils.getCurUserId(), allNeedReviewDate);
     }
 
     public Card update(Map<String, String> map) {
@@ -63,7 +63,7 @@ public class CardService {
         return cardDao.findAll((Specification<Card>) (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             criteriaQuery.distinct(true);
-            predicates.add(criteriaBuilder.equal(root.get("userId"), Utils.getCurUserId()));
+            predicates.add(criteriaBuilder.equal(root.get("userId"), ShiroUtils.getCurUserId()));
             if (labelIds != null && !labelIds.isEmpty()) {
                 Join<Card, Label> join = root.join("labels", JoinType.INNER);
                 predicates.add(join.get("id").in(labelIds));
@@ -71,7 +71,8 @@ public class CardService {
             if (startTime != null && endTime != null) {
                 predicates.add(criteriaBuilder.between(root.get("createTime"), startTime, endTime));
             }
-            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));});
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+        });
     }
 
     public Card save(Map<String, Object> map, String curUserId) {

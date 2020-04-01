@@ -1,10 +1,8 @@
 package com.ori.notebook.model.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "data_card")
+@Table(name = "card")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

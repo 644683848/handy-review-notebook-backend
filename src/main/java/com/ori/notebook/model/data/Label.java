@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "data_label")
+@Table(name = "label")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

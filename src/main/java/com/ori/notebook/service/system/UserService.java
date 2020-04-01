@@ -6,8 +6,14 @@ import com.ori.notebook.model.system.User;
 import com.ori.notebook.service.data.CardService;
 import com.ori.notebook.service.data.LabelService;
 import com.ori.notebook.utils.IdWorker;
-import com.ori.notebook.utils.Utils;
+import com.ori.notebook.utils.JwtUtils;
+import com.ori.notebook.utils.ShiroUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -15,10 +21,12 @@ import java.util.*;
 @Service
 public class UserService {
     private UserDao userDao;
-
     private IdWorker idWorker;
     private CardService cardService;
     private LabelService labelService;
+
+    @Value("${global.user.hash-iterations}")
+    private int hashIterations;
 
     @Autowired
     public UserService(UserDao userDao, IdWorker idWorker, CardService cardService, LabelService labelService) {
@@ -30,19 +38,37 @@ public class UserService {
 
 
     public void changeNickname(String nickname) {
-        User curUser = Utils.getCurUser();
+        User curUser = userDao.findByUsername(ShiroUtils.getCurUsername());
         curUser.setNickname(nickname);
         userDao.save(curUser);
     }
 
+    public List<String> login(String username, String password) {
+        User curUser = userDao.findByUsername(username);
+        Map<String, Object> principal = new HashMap<>();
+        principal.put("userId", curUser.getId());
+        principal.put("username", curUser.getUsername());
+        ShiroUtils.setCurUser(curUser);
+        ShiroUtils.setPrincipal(principal);
+        SecurityUtils.getSubject().login(new UsernamePasswordToken(username, encode(password, curUser.getSalt())));
+        // 登陆成功返回昵称和jwtToken, 失败抛出异常统一处理
+        return Arrays.asList(curUser.getNickname(), JwtUtils.getToken(curUser.getId(), curUser.getUsername()));
+    }
+
     public List<Map<String, Object>> register(String username, String nickname, String password) {
         String _id = idWorker.nextId() + "";
-        User newUser = new User(_id, username, nickname, password);
+        // 加密密码
+        String salt = new SecureRandomNumberGenerator().nextBytes().toString();
+        User newUser = new User(_id, username, nickname, encode(password, salt), salt);
         userDao.save(newUser);
         labelService.saveAll(getInitLabels(), _id);
         Set<Label> labels = labelService.findAllByUserId(_id);
         cardService.saveAll(getInitCards(labels), _id);
         return getInitCards(labels);
+    }
+
+    private String encode(String password, String salt) {
+        return new SimpleHash("md5", password, salt, hashIterations).toString();
     }
 
     private List<Map<String, String>> getInitLabels() {

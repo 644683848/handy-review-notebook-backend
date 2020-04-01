@@ -1,8 +1,23 @@
 {
   "properties": [
     {
-      "name": "user.timeout",
-      "type": "java.lang.Long",
-      "description": "用户登录过期时间."
+      "name": "global.user.hashIterations",
+      "type": "java.lang.String",
+      "description": "密码加密迭代次数."
+    },
+    {
+      "name": "global.user.timeout",
+      "type": "java.lang.String",
+      "description": "jwt token超时时间."
+    },
+    {
+      "name": "global.user.secret",
+      "type": "java.lang.String",
+      "description": "jwt 密钥."
+    },
+    {
+      "name": "global.user.error-url",
+      "type": "java.lang.String",
+      "description": "未认证重定向路径."
     }
   ] }

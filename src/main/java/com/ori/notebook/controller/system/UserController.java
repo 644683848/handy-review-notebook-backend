@@ -1,16 +1,16 @@
 package com.ori.notebook.controller.system;
 
-import com.ori.notebook.dao.system.UserDao;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.ori.notebook.model.result.Result;
 import com.ori.notebook.model.result.ResultCode;
 import com.ori.notebook.service.system.UserService;
-import com.ori.notebook.utils.Utils;
+import com.ori.notebook.utils.JwtUtils;
+import com.ori.notebook.utils.ShiroUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -18,10 +18,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/sys")
+@Slf4j
 public class UserController {
     private UserService userService;
-    @Value("${user.timeout}")
-    private long timeout;
+
 
     @Autowired
     public UserController(UserService userService) {
@@ -34,22 +34,15 @@ public class UserController {
         return new Result(ResultCode.SUCCESS);
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+
+    // TODO 参数验证
+    @PostMapping(value = "/login")
     public Result login (@RequestBody Map<String, String> map) {
-        Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken usernamePasswordToken =
-                new UsernamePasswordToken(map.get("username"), map.get("password"));
         //账号或密码错误在common中统一处理
-        subject.login(usernamePasswordToken);
-        //设置超时时间
-        subject.getSession().setTimeout(timeout);
-        Map<String, Object> res = new HashMap<>();
-        res.put("nickname", Utils.getCurUser().getNickname());
-        res.put("token", subject.getSession().getId());
-        return new Result(ResultCode.SUCCESS, res);
+        return new Result(ResultCode.SUCCESS, userService.login(map.get("username"), map.get("password")));
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @PostMapping(value = "/register")
     public Result register(@RequestBody Map<String, String> map){
         return new Result(ResultCode.SUCCESS,
                 userService.register(map.get("username"), map.get("nickname"), map.get("password") ));

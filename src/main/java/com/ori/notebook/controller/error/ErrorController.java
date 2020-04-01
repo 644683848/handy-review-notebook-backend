@@ -1,8 +1,7 @@
-package com.ori.notebook.common.controller;
+package com.ori.notebook.controller.error;
 
 import com.ori.notebook.model.result.Result;
 import com.ori.notebook.model.result.ResultCode;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

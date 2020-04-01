@@ -1,10 +1,9 @@
 package com.ori.notebook.controller.data;
 
-import com.ori.notebook.model.data.Label;
 import com.ori.notebook.model.result.Result;
 import com.ori.notebook.model.result.ResultCode;
 import com.ori.notebook.service.data.LabelService;
-import com.ori.notebook.utils.Utils;
+import com.ori.notebook.utils.ShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,11 +27,11 @@ public class LabelController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Result findAllByUserId() {
-        return new Result(ResultCode.SUCCESS, labelService.findAllByUserId(Utils.getCurUserId()));
+        return new Result(ResultCode.SUCCESS, labelService.findAllByUserId(ShiroUtils.getCurUserId()));
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public Result addLabel(@RequestBody Map<String, String> map) {
-        return new Result(ResultCode.SUCCESS, labelService.save(map, Utils.getCurUserId()));
+        return new Result(ResultCode.SUCCESS, labelService.save(map, ShiroUtils.getCurUserId()));
     }
 }

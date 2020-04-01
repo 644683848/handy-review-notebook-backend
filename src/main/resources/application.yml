@@ -25,5 +25,14 @@ spring:
   redis:
     host: 182.92.243.125
     port: 6379
-user:
-  timeout: -10000
+
+global:
+  user:
+    hash-iterations: 2
+    time-out: 604800
+#    time-out: 15
+
+logging:
+  level:
+    com.ori.notebook:
+      trace

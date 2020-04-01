@@ -4,13 +4,12 @@ import com.ori.notebook.model.data.Card;
 import com.ori.notebook.model.result.Result;
 import com.ori.notebook.model.result.ResultCode;
 import com.ori.notebook.service.data.CardService;
-import com.ori.notebook.utils.Utils;
+import com.ori.notebook.utils.ShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -61,7 +60,7 @@ public class CardController {
 
     @RequestMapping(method = RequestMethod.POST)
     public Result addCard(@RequestBody Map<String, Object> map) {
-        return new Result(ResultCode.SUCCESS, cardService.save(map, Utils.getCurUserId()));
+        return new Result(ResultCode.SUCCESS, cardService.save(map, ShiroUtils.getCurUserId()));
     }
 
 }

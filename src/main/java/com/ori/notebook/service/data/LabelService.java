@@ -4,7 +4,6 @@ import com.ori.notebook.common.Exception.NoSuchIdException;
 import com.ori.notebook.dao.data.LabelDao;
 import com.ori.notebook.model.data.Label;
 import com.ori.notebook.utils.IdWorker;
-import com.ori.notebook.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

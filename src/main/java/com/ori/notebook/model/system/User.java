@@ -3,7 +3,6 @@ package com.ori.notebook.model.system;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.crazycake.shiro.AuthCachePrincipal;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,15 +14,12 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User implements Serializable, AuthCachePrincipal {
+public class User implements Serializable {
     @Id
     String id;
     String username;
     String nickname;
     String password;
+    String salt;
 
-    @Override
-    public String getAuthCacheKey() {
-        return null;
-    }
 }
